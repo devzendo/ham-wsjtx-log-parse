@@ -5,7 +5,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME             => 'Ham::WSJTX::Logparse',
-    AUTHOR           => q{Matt Gumbley <matt.gumbley@devzendo.org>},
+    AUTHOR           => q{Matt Gumbley <devzendo@cpan.org>},
     VERSION_FROM     => 'lib/Ham/WSJTX/Logparse.pm',
     ABSTRACT_FROM    => 'lib/Ham/WSJTX/Logparse.pm',
     LICENSE          => 'apache_2_0',
