@@ -99,6 +99,11 @@ previous paragragh).
 
 Matt Gumbley, C<< devzendo at cpan.org> >>
 
+=head1 SOURCE CODE
+
+The Mercurial source repository for this module is kindly hosted by Bitbucket, at:
+https://devzendo@bitbucket.org/devzendo/ham-wsjtx-log-parse
+
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-ham-wsjtx-logparse at rt.cpan.org>, or through
