@@ -4,8 +4,6 @@ use 5.006;
 use strict;
 use warnings;
 
-use Data::Dumper;
-
 =head1 NAME
 
 Ham::WSJTX::Logparse - Parses ALL.TXT log files from Joe Taylor K1JT's WSJT-X, to extract CQ and calling station
