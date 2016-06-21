@@ -23,4 +23,15 @@ WriteMakefile(
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Ham-WSJTX-Logparse-*' },
+    META_MERGE => {
+        'meta-spec' => { version => 2 },
+        resources => {
+            repository => {
+                type => 'hg',
+                url  => 'https://bitbucket.org/devzendo/ham-wsjtx-log-parse',
+                web  => 'https://bitbucket.org/devzendo/ham-wsjtx-log-parse',
+            },
+        },
+    },
+
 );
