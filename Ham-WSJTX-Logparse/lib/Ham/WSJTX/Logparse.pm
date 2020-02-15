@@ -17,7 +17,7 @@ Thank you, povaX!
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =head1 SYNOPSIS
 
@@ -36,14 +36,15 @@ Extract all log entries for a given band:
     # Define a callback
 
     my $callback = sub {
-       my $date = shift;
-       my $time = shift;
+       my $date = shift; # e.g. 2018-12-13 or 2015-Apr-13
+       my $time = shift; # e.g. 1120 or 143034 (hhmm or hhmmss)
        my $power = shift;
        my $offset = shift;
-       my $mode = shift;
+       my $mode = shift; # e.g. @, # or ~ etc.
        my $callsign = shift;
        my $grid = shift;
-       print "date $date time $time power $power offset $offset mode $mode callsign $callsign grid $grid\n";
+       my $freq = shift;
+       print "date $date time $time power $power offset $offset mode $mode callsign $callsign grid $grid freq $freq\n";
        # sure you can do something interesting with this!
     };
 
@@ -76,6 +77,8 @@ Parses all discovered or supplied files, correctly determining the date of each 
 relates to the band of interest, calls the callback with the entry details.
 
 The 'band of interest' is of the form nnnm, e.g. 20m, 2m, 160m, 2200m. Only one band can be filtered at any time.
+The module knows most of the common frequencies for each band, but isn't comprehensive.. Please let me know of
+omissions or mistakes.
 
 The callback is a sub as shown above in the synopsis.
 
@@ -94,6 +97,8 @@ Better validation may be considered for a later release.
 An entry is considered a 'heard station' entry if it has some text (maybe CQ or a callsign), followed by some text
 (most likely a callsign), followed by a grid square (two characters, two digits - see the note of caution in the
 previous paragragh).
+
+Frequency was added as a parameter to the callback in 0.02.
 
 =head1 AUTHOR
 
@@ -142,7 +147,7 @@ L<http://search.cpan.org/dist/Ham-WSJTX-Logparse/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2016 Matt Gumbley.
+Copyright 2016-2019 Matt Gumbley.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -159,39 +164,72 @@ limitations under the License.
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 our %freqToBand = (
-    '144.491'  => '2m',    # +2
+    '144.491'  => '2m',
     '144.489'  => '2m',
-    '70.093'   => '4m',    # +2
+    '144.360'  => '2m',
+    '144.174'  => '2m',
+    '144.150'  => '2m',
+    '144.120'  => '2m',
+    '70.104'   => '4m',
+    '70.102'   => '4m',
+    '70.100'   => '4m',
+    '70.093'   => '4m',
     '70.091'   => '4m',
-    '50.278'   => '6m',    # +2
+    '50.380'   => '6m',
+    '50.323'   => '6m',
+    '50.313'   => '6m',
+    '50.312'   => '6m',
+    '50.310'   => '6m',
+    '50.293'   => '6m',
+    '50.280'   => '6m',
+    '50.278'   => '6m',
     '50.276'   => '6m',
-    '28.078'   => '10m',   # +2
+    '50.200'   => '6m',
+    '28.1246'  => '10m',
+    '28.078'   => '10m',
     '28.076'   => '10m',
-    '24.919'   => '12m',   # +2
+    '28.074'   => '10m',
+    '24.919'   => '12m',
     '24.917'   => '12m',
-    '21.078'   => '15m',   # +2
+    '24.915'   => '12m',
+    '21.0946'  => '15m',
+    '21.078'   => '15m',
     '21.076'   => '15m',
-    '18.104'   => '17m',   # +2
+    '21.074'   => '15m',
+    '18.1046'  => '17m',
+    '18.104'   => '17m',
     '18.102'   => '17m',
-    '14.078'   => '20m',   # +2
+    '18.100'   => '17m',
+    '14.0956'  => '20m',
+    '14.078'   => '20m',
     '14.076'   => '20m',
-    '10.14'    => '30m',   # +2
+    '14.074'   => '20m',
+    '10.14'    => '30m',
     '10.138'   => '30m',
-    '7.078'   => '40m',   # +2
-    '7.076'   => '40m',
-    '5.359'   => '60m',   # +2
-    '5.357'   => '60m',
-    '3.578'   => '80m',   # +2
-    '3.576'   => '80m',
-    '1.84'    => '160m',  # +2
-    '1.838'   => '160m',
-    '0.4762'  => '630m',  # +2
-    '0.4742'  => '630m',
-    '0.13813' => '2200m', # +2
-    '0.13613' => '2200m',
+    '10.1387'  => '30m',
+    '10.00'    => '30m',
+    '7.078'    => '40m',
+    '7.076'    => '40m',
+    '7.074'    => '40m',
+    '7.0386'   => '40m',
+    '5.359'    => '60m',
+    '5.357'    => '60m',
+    '3.578'    => '80m',
+    '3.576'    => '80m',
+    '3.573'    => '80m',
+    '3.572'    => '80m',
+    '3.570'    => '80m',
+    '1.8366'     => '160m',
+    '1.84'     => '160m',
+    '1.839'    => '160m',
+    '1.838'    => '160m',
+    '0.4762'   => '630m',
+    '0.4742'   => '630m',
+    '0.13813'  => '2200m',
+    '0.13613'  => '2200m',
 );
 
 sub new {
@@ -240,18 +278,21 @@ sub parseForBand {
         }
         my $currentBand = undef;
         my $currentDate = undef;
+        my $currentFreq = undef;
         while (<F>) {
             chomp;
-            #print "line [$_]\n";
+            #warn "line [$_]\n";
             # Only interested in data from a specific band, and the indicator for changing band/mode looks like:
             # 2015-Apr-15 20:13  14.076 MHz  JT9
+            # And for more recent WSJT-X:
+            # 2018-12-13 21:05  7.074 MHz  FT8
             # So extract the frequency, and look up the band. This also gives us the date. Records like this are always
             # written at startup, mode change, and at midnight.
-            if (/^(\d{4}-\S{3}-\d{2}) \d{2}:\d{2}\s+(\d+\.\d+) MHz\s+\S+\s*$/) {
+            if (/^(\d{4}-(\d{2}|\S{3})-\d{2}) \d{2}:\d{2}\s+(\d+\.\d+) MHz\s+\S+\s*$/) {
                 $currentDate = $1;
-                my $frequency = $2;
-                $currentBand = $freqToBand{$frequency};
-                #print "data being received for $currentBand (filtering on $bandOfInterest)\n";
+                $currentFreq = $3;
+                $currentBand = $freqToBand{$currentFreq};
+                #warn "data being received for freq $currentFreq band $currentBand (filtering on $bandOfInterest)\n";
                 next;
             }
             # Time/Power/Freq offset/Mode/Call/Square can be extracted from records like these:
@@ -261,7 +302,11 @@ sub parseForBand {
             # 0001 -15  0.1  628 # KK7X K8MDA EN80
             # 0002 -13  1.1 1322 # CQ YV5FRD FK60
             # 0003  -3  0.5 1002 # TF2MSN K1RI FN41
-            if (/^(\d{4})\s+(-\d+)\s+[-\d.]+\s+(\d+)\s([#@])\s\w+\s+(\w+)\s+([A-Z]{2}\d{2})\s*$/) {
+            # Or for versions of WSJT-X that support faster modes like FT8:
+            # 210530 -18 -0.1 1366 ~  CQ EA4MD IN80
+            # 210530   0  1.6 1104 ~  CQ EC5KY JN00
+            # 123830   4 -0.2  585 ~  CQ DX YU1AB KN04
+            if (/^(\d{4,6})\s+(-?\d+)\s+[-\d.]+\s+(\d+)\s([#@~])\s+\w+\s+(\w+)\s+([A-Z]{2}\d{2})\s*$/) {
                 my $ctime = $1;
                 my $cpower = $2;
                 my $coffset = $3;
@@ -271,9 +316,11 @@ sub parseForBand {
                 # callsigns must have at least one digit.
                 next unless ($ccallsign =~ /\d/);
                 if (defined $currentDate && $bandOfInterest eq $currentBand) {
-                    $callback->($currentDate, $ctime, $cpower, $coffset, $cmode, $ccallsign, $cgrid);
+                    $callback->($currentDate, $ctime, $cpower, $coffset, $cmode, $ccallsign, $cgrid, $currentFreq);
                 }
                 next;
+            } else {
+                # warn "line does not match regex\n";
             }
         }
         close F;
